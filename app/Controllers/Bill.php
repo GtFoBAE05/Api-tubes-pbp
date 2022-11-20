@@ -15,14 +15,16 @@ class Bill extends ResourceController
     public function index()
     {
         $modelBill = new Modelbill();
-        $data = $modelBill->findAll();
-        $response = [
-            'status' => '200',
-            'error' => 'false',
-            'message' => '',
-            'totaldata' => count($data),
-            'data' => $data,
-        ];
+        $data = $modelBill->asArray()->findAll();
+        // $response = [
+        //     //'status' => '200',
+        //     //'error' => 'false',
+        //     //'message' => '',
+        //     //'totaldata' => count($data),
+        //     'data' => $data,
+        // ];
+
+        $response = $data;
 
         return $this->respond($response, 200);
 
@@ -39,13 +41,15 @@ class Bill extends ResourceController
         $data = $modelBill->like('id', $id)->get()->getResult();
 
         if (count($data) >= 1) {
-            $response = [
-                'status' => '200',
-                'error' => 'false',
-                'message' => '',
-                'totaldata' => count($data),
-                'data' => $data,
-            ];
+            // $response = [
+            //     'status' => '200',
+            //     'error' => 'false',
+            //     'message' => '',
+            //     'totaldata' => count($data),
+            //     'data' => $data,
+            // ];
+
+            $response = $data;
 
             return $this->respond($response, 200);
 
@@ -73,23 +77,34 @@ class Bill extends ResourceController
     public function create()
     {
         $modelBill = new Modelbill();
-        $userId = $this->request->getPost('userId');
-        $name = $this->request->getPost('name');
-        $date = $this->request->getPost('date');
-        $amount = $this->request->getPost('amount');
+        // $userId = $this->request->getPost('userId');
+        // $name = $this->request->getPost('name');
+        // $date = $this->request->getPost('date');
+        // $amount = $this->request->getPost('amount');
 
-        $modelBill->insert([
-            'userId' => $userId,
-            'name' => $name,
-            'date' => $date,
-            'amount' => $amount,
-        ]);
+        // $modelBill->insert([
+        //     'userId' => $userId,
+        //     'name' => $name,
+        //     'date' => $date,
+        //     'amount' => $amount,
+        // ]);
+
+        $data = [
+            'userId' => $this->request->getVar('userId'),
+            'name' => $this->request->getVar('name'),
+            'date' => $this->request->getVar('date'),
+            'amount' => $this->request->getVar('amount'),
+        ];
+
+        $modelBill->insert($data);
 
         $response = [
             'status' => '201',
             'error' => 'false',
             'message' => 'Berhasil tambah bill',
         ];
+
+        // $response = 'Berhasil tambah bill';
 
         return $this->respond($response, 201);
 
@@ -121,7 +136,7 @@ class Bill extends ResourceController
             'amount' => $this->request->getVar('amount'),
         ];
 
-        $data = $this->request->getRawInput();
+        //$data = $this->request->getRawInput();
         $modelBill->update($id, $data);
         $response = [
             'status' => 200,
