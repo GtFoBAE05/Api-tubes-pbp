@@ -17,13 +17,15 @@ class Users extends ResourceController
         //get all
         $modelUsers = new Modelusers();
         $data = $modelUsers->findAll();
-        $response = [
-            'status' => 200,
-            'error' => "false",
-            'message' => '',
-            'totaldata' => count($data),
-            'data' => $data,
-        ];
+        // $response = [
+        //     'status' => 200,
+        //     'error' => "false",
+        //     'message' => '',
+        //     'totaldata' => count($data),
+        //     'data' => $data,
+        // ];
+
+        $response = $data;
 
         return $this->respond($response, 200);
     }
@@ -40,13 +42,15 @@ class Users extends ResourceController
         $data = $modelUsers->like("id", $id)->get()->getResult();
 
         if ($data >= 1) {
-            $response = [
-                'status' => 200,
-                'error' => "false",
-                'message' => '',
-                'totaldata' => count($data),
-                'data' => $data,
-            ];
+            // $response = [
+            //     'status' => 200,
+            //     'error' => "false",
+            //     'message' => '',
+            //     'totaldata' => count($data),
+            //     'data' => $data,
+            // ];
+
+            $response = $data;
 
             return $this->respond($response, 200);
         } else {
@@ -73,21 +77,31 @@ class Users extends ResourceController
     {
         //create
         $modelUsers = new Modelusers();
-        $username = $this->request->getPost('username');
-        $password = $this->request->getPost('password');
-        $email = $this->request->getPost('email');
-        $date = $this->request->getPost('date');
-        $noTelp = $this->request->getPost('noTelp');
+        // $username = $this->request->getPost('username');
+        // $password = $this->request->getPost('password');
+        // $email = $this->request->getPost('email');
+        // $date = $this->request->getPost('date');
+        // $noTelp = $this->request->getPost('noTelp');
 
-        //belum validasi
+        // //belum validasi
 
-        $modelUsers->insert([
-            'username' => $username,
-            'password' => $password,
-            'email' => $email,
-            'data' => $date,
-            'noTelp' => $noTelp,
-        ]);
+        // $modelUsers->insert([
+        //     'username' => $username,
+        //     'password' => $password,
+        //     'email' => $email,
+        //     'data' => $date,
+        //     'noTelp' => $noTelp,
+        // ]);
+
+        $data = [
+            'username' => $this->request->getVar('username'),
+            'password' => $this->request->getVar('password'),
+            'email' => $this->request->getVar('email'),
+            'date' => $this->request->getVar('date'),
+            'noTelp' => $this->request->getVar('noTelp'),
+        ];
+
+        $modelUsers->insert($data);
 
         $response = [
             'status' => 201,
@@ -127,7 +141,6 @@ class Users extends ResourceController
             'noTelp' => $this->request->getVar('noTelp'),
         ];
 
-        $data = $this->request->getRawInput();
         $modelUsers->update($id, $data);
         $response = [
             'status' => 200,
