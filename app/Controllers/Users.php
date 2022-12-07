@@ -93,23 +93,59 @@ class Users extends ResourceController
         //     'noTelp' => $noTelp,
         // ]);
 
-        $data = [
-            'username' => $this->request->getVar('username'),
-            'password' => $this->request->getVar('password'),
-            'email' => $this->request->getVar('email'),
-            'date' => $this->request->getVar('date'),
-            'noTelp' => $this->request->getVar('noTelp'),
+        $rules = [
+            'username' => "required",
+            'password' => "required",
+            'email' => "required|valid_email",
+            'date' => "required",
+            'noTelp' => "required",
         ];
 
-        $modelUsers->insert($data);
-
-        $response = [
-            'status' => 201,
-            'error' => 'false',
-            'message' => 'Berhasil tambah data',
+        $messages = [
+            "username" => [
+                "required" => "username is required",
+            ],
+            "password" => [
+                "required" => "password is required",
+            ],
+            "email" => [
+                "required" => "Email required",
+                "valid_email" => "Email address is not in format",
+            ],
+            "date" => [
+                "required" => "date is required",
+            ],
+            "noTelp" => [
+                "required" => "Phone Number is required",
+            ],
         ];
 
-        return $this->respond($response, 201);
+        if (!$this->validate($rules, $messages)) {
+            $response = [
+                'status' => 500,
+                'error' => true,
+                'message' => $this->validator->getErrors(),
+                'data' => [],
+            ];
+        } else {
+            $data = [
+                'username' => $this->request->getVar('username'),
+                'password' => $this->request->getVar('password'),
+                'email' => $this->request->getVar('email'),
+                'date' => $this->request->getVar('date'),
+                'noTelp' => $this->request->getVar('noTelp'),
+            ];
+
+            $modelUsers->insert($data);
+
+            $response = [
+                'status' => 201,
+                'error' => 'false',
+                'message' => 'Berhasil tambah data',
+            ];
+
+            return $this->respond($response, 201);
+        }
 
     }
 
